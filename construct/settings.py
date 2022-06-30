@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'construct.usuarios'
+    'construct.usuarios',
+    'rolepermissions',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Config Auth
 AUTH_USER_MODEL = 'usuarios.Users'
+
+
+#Definindo o Role Permisssions
+ROLEPERMISSIONS_MODULE = 'construct.roles'
