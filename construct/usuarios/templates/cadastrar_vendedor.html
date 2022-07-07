@@ -22,7 +22,31 @@
               <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-        </form>  
+        </form> 
+        <hr class="bg-hr">
+
+        <table class="table table-striped table-dark table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Sobrenome</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">Último login</th>
+              <th scope="col">Excluir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vendedor in vendedores %}
+            <tr>
+              <td>{{vendedor.first_name}}</td>
+              <td>{{vendedor.last_name}}</td>
+              <td>{{vendedor.email}}</td>
+              <td>{{vendedor.last_login}}</td>
+              <td><a href="{% url 'excluir_usuario' vendedor.id %}" role="button" class="btn btn-danger">Excluir Usuário</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>    
+      </table>        
     </div>
   
 </div>

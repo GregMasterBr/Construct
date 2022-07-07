@@ -1,9 +1,10 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rolepermissions.decorators import has_permission_decorator
 from .models import Users
 from django.urls import reverse
 from django.contrib import auth
+
 # Create your views here.
 
 @has_permission_decorator('cadastrar_vendedor')
@@ -21,7 +22,14 @@ def cadastrar_vendedor(request):
         # TODO: Utilizar messages do django para redirecionar com uma mensagem
         return HttpResponse('Conta do usuário criada')
     else:
-        return render(request,'cadastrar_vendedor.html')
+        vendedores = Users.objects.filter(cargo="V")
+        return render(request,'cadastrar_vendedor.html', {'vendedores':vendedores})
+
+@has_permission_decorator('cadastrar_vendedor')
+def excluir_usuario(request, id):
+    vendedor = get_object_or_404(Users, id=id)
+    vendedor.delete()
+    return redirect(reverse('cadastrar_vendedor'))
 
 def login(request):
     if request.method == "GET":
