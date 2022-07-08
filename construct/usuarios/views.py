@@ -4,6 +4,9 @@ from rolepermissions.decorators import has_permission_decorator
 from .models import Users
 from django.urls import reverse
 from django.contrib import auth
+#Django Messages - definida lá no settings - MESSAGES_TAG
+from django.contrib import messages
+from django.contrib.messages import constants
 
 # Create your views here.
 
@@ -17,9 +20,12 @@ def cadastrar_vendedor(request):
 
         if user.exists():
             # TODO: Utilizar messages do django
+            messages.add_message(request, constants.ERROR, 'Já existe o usuário')
             return HttpResponse('Já existe o usuário')
+            
         user = Users.objects.create_user(username=email, email=email, password=password, cargo="V")
         # TODO: Utilizar messages do django para redirecionar com uma mensagem
+        messages.add_message(request, constants.SUCCESS, 'Cadastro realizado com sucesso')
         return HttpResponse('Conta do usuário criada')
     else:
         vendedores = Users.objects.filter(cargo="V")
@@ -29,6 +35,7 @@ def cadastrar_vendedor(request):
 def excluir_usuario(request, id):
     vendedor = get_object_or_404(Users, id=id)
     vendedor.delete()
+    messages.add_message(request, constants.ERROR, 'Vendedor excluído com sucesso!')
     return redirect(reverse('cadastrar_vendedor'))
 
 def login(request):
@@ -44,9 +51,11 @@ def login(request):
 
         if not user:
             #TODO: Redirecionar com mensagem de erro
+            messages.add_message(request, constants.ERROR, 'Usuário inválido!')
             return HttpResponse('Usuário inválido!')
         else:
             auth.login(request,user)
+            messages.add_message(request, constants.SUCCESS, 'Usuário logado com sucesso!')
             return HttpResponse('Usuário logado com sucesso')
 
 def logout(request):

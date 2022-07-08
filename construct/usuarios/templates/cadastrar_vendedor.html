@@ -5,6 +5,17 @@
 
 {% block 'body' %} 
 <div class="container">
+  
+  {% if messages %}
+    <br/>
+    {% for message in messages %}
+        <div class="alert {{message.tags}}" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                              
+        </div>
+    {% endfor %}
+  {% endif %}         
+
     <h1 class="pt-4">CADASTRAR VENDEDOR</h1>
     <div class="my-4 px-3">
         <form action="{% url 'cadastrar_vendedor' %}" method="POST" name="">{% csrf_token %}
@@ -41,7 +52,13 @@
               <td>{{vendedor.first_name}}</td>
               <td>{{vendedor.last_name}}</td>
               <td>{{vendedor.email}}</td>
-              <td>{{vendedor.last_login}}</td>
+              <td>
+                {% if not vendedor.last_login  %}
+                  ----
+                {% else %}
+                  {{vendedor.last_login}}
+                {% endif %}
+              </td>
               <td><a href="{% url 'excluir_usuario' vendedor.id %}" role="button" class="btn btn-danger">Excluir Usuário</a></td>
             </tr>
             {% endfor %}
