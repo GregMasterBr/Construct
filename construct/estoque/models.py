@@ -7,8 +7,8 @@ class Categoria(models.Model):
     created_at = models.DateTimeField('criado em', auto_now=True)
     
     class Meta: 
-        verbose_name_plural = 'estoques'
-        verbose_name = 'estoque'
+        verbose_name_plural = 'categorias'
+        verbose_name = 'categoria'
         ordering = ('-created_at',)
 
     def __str__(self):
