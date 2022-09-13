@@ -13,9 +13,12 @@ from django.contrib.messages import constants
 @has_permission_decorator('cadastrar_vendedor')
 def cadastrar_vendedor(request):
     if request.method == "POST":
+        nome = request.POST.get('nome')
+        sobrenome = request.POST.get('sobrenome')        
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        # TODO: Implementar validações dos dados.
         user = Users.objects.filter(email=email)
 
         if user.exists():
@@ -23,10 +26,11 @@ def cadastrar_vendedor(request):
             messages.add_message(request, constants.ERROR, 'Já existe o usuário')
             return HttpResponse('Já existe o usuário')
             
-        user = Users.objects.create_user(username=email, email=email, password=password, cargo="V")
+        user = Users.objects.create_user(first_name=nome,last_name=sobrenome,username=email, email=email, password=password, cargo="V")
         # TODO: Utilizar messages do django para redirecionar com uma mensagem
         messages.add_message(request, constants.SUCCESS, 'Cadastro realizado com sucesso')
-        return HttpResponse('Conta do usuário criada')
+        return redirect(reverse('cadastrar_vendedor'))
+        #return HttpResponse('Conta do usuário criada')
     else:
         vendedores = Users.objects.filter(cargo="V")
         return render(request,'cadastrar_vendedor.html', {'vendedores':vendedores})

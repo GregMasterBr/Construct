@@ -37,4 +37,7 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome   
 
-    
+
+class Imagem(models.Model):
+    imagem = models.ImageField(upload_to="produtos")
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
