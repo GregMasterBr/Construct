@@ -41,3 +41,11 @@ class Produto(models.Model):
 class Imagem(models.Model):
     imagem = models.ImageField(upload_to="produtos")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    
+    class Meta: 
+        verbose_name_plural = 'imagens'
+        verbose_name = 'imagem'
+        ordering = ('-produto',)
+
+    def __str__(self):
+        return self.imagem   
