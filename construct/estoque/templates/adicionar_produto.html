@@ -19,7 +19,7 @@
     <div class="my-4 px-3"> 
         <form action="{% url 'adicionar_produto'%}" method="POST" enctype = "multipart/form-data" name="adicionar_produto">{% csrf_token %}
             <label>Imagens: </label>
-            <input type="file" name="imagens" multiple />
+            <input type="file" name="imagens"  accept="image/*" multiple />
             <br/> <br/>
             <label>Nome do produto: </label>
             <input type="text" name="nome_produto" />            
