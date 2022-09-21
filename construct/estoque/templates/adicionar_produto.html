@@ -1,47 +1,80 @@
 {% extends 'base.html' %}
+{% load filters %}
+{% load static %}
 
-{% block 'head' %} {% endblock %}
+{% block 'head' %} 
+<link href="{% static 'estoque/css/main.css' %}" rel="stylesheet" />
+
+{% endblock %}
 {% block 'title' %} Cadastrar Produto {% endblock %}
 
-{% block 'body' %} 
+{% block 'body' %}
 <div class="container">
+
     {% if messages %}
     <br/>
-    {% for message in messages %}
-        <div class="alert {{message.tags}}" role="alert">
-            {{message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                              
-        </div>
-    {% endfor %}
-  {% endif %}         
+        {% for message in messages %}
+            <div class="alert {{message.tags}}" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                              
+            </div>
+        {% endfor %}
+    {% endif %}    
+    <form action="{% url 'adicionar_produto' %}" method="POST" enctype="multipart/form-data" name="adicionar_produto"> {% csrf_token %}
+        <br/>
+        <label>Imagens:</label>
+            <input class="form-control" type="file" name="imagens"  accept="image/*" multiple />
+        <br/> <br/>
 
-    <h1 class="pt-4">CADASTRAR PRODUTO</h1>
-    <div class="my-4 px-3"> 
-        <form action="{% url 'adicionar_produto'%}" method="POST" enctype = "multipart/form-data" name="adicionar_produto">{% csrf_token %}
-            <label>Imagens: </label>
-            <input type="file" name="imagens"  accept="image/*" multiple />
-            <br/> <br/>
-            <label>Nome do produto: </label>
-            <input type="text" name="nome_produto" />            
-            <br/> <br/>
-            <label>Selecione a categoria do produto: </label>
-            <select name="categoria" >
-                {% for categoria in categorias %}
+        <label>Nome:</label>
+        <input  class="form-control" type="text" name="nome_produto" />
+        <br/> <br/>
+
+        <label>Selecione a categoria do produto</label>
+        <select  class="form-control" name="categoria">
+            {% for categoria in categorias %}
                 <option value="{{categoria.id}}">{{categoria.titulo}}</option>
-                {% endfor %}
-            </select>     
-            <br/> <br/>
-            <label>Estoque inicial do produto: </label>
-            <input type="number" name="quantidade" min="1"  value="1"/>  
-            <br/> <br/>
-            <label>Preço de compra: </label>
-            <input type="number" name="preco_compra" min="0" value="0" />          
-            <br/> <br/>
-            <label>Preço de venda: </label>
-            <input type="number" name="preco_venda" min="0" value="0"/>                        
-            <br/> <br/>
-            <input type="submit" />            
-        </form>        
-    </div>   
+            {% endfor %}
+            
+        </select>
+        <br/> <br/>
+
+        <label>Estoque inicial:</label>
+        <input class="form-control" type="number" name="quantidade" min="1"  value="1" />
+        <br/> <br/>
+
+        <label>Preço de compra:</label>
+        <input class="form-control" type="number" name="preco_compra" min="1"  value="1" />
+        <br/> <br/>
+
+        <label>Preço de venda:</label>
+        <input class="form-control" type="number" name="preco_venda" min="1"  value="1" />
+        <br/> <br/>
+
+        <input class="btn btn-success" type="submit" value="Enviar" />
+
+    </form>
+    <hr style="background-color: gray;">
+
+    <div class="listar_produtos">
+        {% for produto in produtos %}
+            <div style="background-color: #0f0f0f;" class="card" style="width: 18rem;">
+               {% if produto|get_first_image %}
+                <div class="embed-responsive embed-responsive-16by9">
+                    <img width="250" class="card-img-top embed-responsive-item" src="{{produto|get_first_image}}" />
+                </div>
+               {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{produto.nome}}</h5>
+                    <span class="badge badge-info">{{produto.categoria}}</span>
+                    <br>
+                    <br>
+                    <a href="#" class="btn btn-primary">Acessar</a>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+
+    </div>
 </div>
 {% endblock %}

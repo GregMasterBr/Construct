@@ -17,7 +17,8 @@ import sys
 def adicionar_produto(request):
     if request.method == "GET":
         categorias = Categoria.objects.all()
-        return render (request, 'adicionar_produto.html', {'categorias':categorias} )
+        produtos = Produto.objects.all()
+        return render (request, 'adicionar_produto.html', {'categorias':categorias, 'produtos':produtos} )
     elif request.method == "POST":
         nome_produto = request.POST.get("nome_produto")
         categoria = request.POST.get("categoria")
@@ -27,7 +28,6 @@ def adicionar_produto(request):
         lista_de_imagens = request.FILES.getlist("imagens")
         produto = Produto(nome=nome_produto,categoria_id=categoria, quantidade=quantidade, preco_compra=preco_compra, preco_venda=preco_venda )
         produto.save()
-        messages.add_message(request, constants.SUCCESS, 'Produto cadastrado com sucesso!')
 
         for img_arquivo in lista_de_imagens:
             # if img.size > 500:
@@ -55,11 +55,11 @@ def adicionar_produto(request):
             #imagem = Imagem(imagem=img_arquivo, produto=produto)
             imagem = Imagem(imagem=img_converte_in_memory_file, produto=produto)
             imagem.save()
-
+        messages.add_message(request, constants.SUCCESS, 'Produto cadastrado com sucesso!')
         return redirect(reverse('adicionar_produto'))
 
 def excluir_produto(request, id):
     produto = get_object_or_404(Produto, id=id)
     produto.delete()
     messages.add_message(request, constants.ERROR, 'Produto excluído com sucesso!')
-    return redirect(reverse('adicionar_produto'))
+    return redirect(reverse('adicionar_produto')) # o reverse espera o name da url
