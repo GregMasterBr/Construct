@@ -5,6 +5,7 @@ from django.urls import reverse
 #Django Messages - definida lá no settings - MESSAGES_TAG
 from django.contrib import messages
 from django.contrib.messages import constants
+from rolepermissions.decorators import has_permission_decorator
 
 from PIL import Image, ImageDraw
 from datetime import date
@@ -12,7 +13,10 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
 
+from .forms import ProdutoForm
+
 # Create your views here.
+@has_permission_decorator('cadastrar_produtos')
 
 def adicionar_produto(request):
     if request.method == "GET":
@@ -63,3 +67,12 @@ def excluir_produto(request, id):
     produto.delete()
     messages.add_message(request, constants.ERROR, 'Produto excluído com sucesso!')
     return redirect(reverse('adicionar_produto')) # o reverse espera o name da url
+
+
+def produto(request, slug):
+    if request.method == "GET":
+        produto = Produto.objects.get(slug=slug)
+        data = produto.__dict__
+        data['categoria'] = produto.categoria.id
+        form = ProdutoForm(initial=data)
+        return render(request, 'produto.html', {'form': form})
